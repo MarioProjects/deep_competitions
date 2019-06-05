@@ -1,0 +1,75 @@
+.first-row{
+    margin-top: 4rem;
+}
+
+.dropdown{
+    float: left;
+    margin-right: 1.4rem;
+}
+
+#dropdownDB{
+    font-size: 1.2rem;
+}
+
+.leader-title{
+    padding-top: 0.3rem;
+    color: #333333;
+}
+
+#dropdownDB{
+    width: 10rem;
+    height: 3rem;
+}
+
+
+.leader-info{
+    margin-top: 2rem;
+}
+
+.leader-table{
+    margin-top: 1.7rem;
+}
+
+.leader-table table{
+    margin-top: 1rem;
+}
+
+.empty_table{
+    background-color: rgba(218, 218, 218, 0.35);
+}
+
+.my_submission{
+    background-color: rgba(173,242,249,0.35);
+}
+
+p{
+    font-size: 0.9rem;
+}
+
+a { color:white; text-decoration: none; }
+a:hover { color:white; text-decoration: none; }
+.nav a { color:white; text-decoration: none; }
+
+.best_text{
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.inputForm{
+    width: 95%;
+    height: 1.7rem;
+    padding: 0.3rem;
+    margin-top: 0.4rem;
+}
+
+.registerBtn{
+    margin-top: 0.6rem;
+}
+
+form > p{
+    font-size: 1rem;
+}
+
+nav > div{
+    color: white;
+}

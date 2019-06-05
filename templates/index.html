@@ -1,0 +1,224 @@
+{% extends "base.html" %} {% block content %}
+
+<script>
+
+    var mnist_info = JSON.parse('{{ mnist_info | default("") | tojson | safe}}');
+    var cifar10_info = JSON.parse('{{ cifar10_info | default("") | tojson | safe}}');
+    var show_modal = JSON.parse('{{ show_modal | default("") | tojson | safe }}');
+
+    
+    $(document).ready(function () {
+        db_info(mnist_info, $(".table-mnist"));
+        db_info(cifar10_info, $(".table-cifar10"));
+        if(show_modal!="" && !jQuery.isEmptyObject(show_modal)){manage_modals(show_modal);}
+    });
+
+</script>
+
+<div class="row first-row">
+    <div class="col-sm-12">
+        <div class="page-info">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownDB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dashboard
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownDB">
+                <a class="dropdown-item" href="#">MNIST</a>
+                <a class="dropdown-item" href="#">CIFAR-10</a>
+                </div>
+            </div>
+            <div class="leader-title">
+                <h2>Public Leaderboard - Computer Vision Competition</h2>
+            </div>
+        </div>
+
+        <div class="leader-info">
+            <p>This leaderboard is calculated on approximately 30% of the test data.<br>
+            The final results will be bases on the other 70%, so the final standings may be different.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mnist-row leader-table">
+    <div class="col-sm-12">
+        <h3>MNIST Scores</h3>
+        <table class="table table-mnist">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Team Name</th>
+                <th scope="col">Score</th>
+                <th scope="col">Entries</th>
+                <th scope="col">Last Submission <span class="best_text">(Best)</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- LOS RESULTADOS DEBEN SER CARGADOS EN PYTHON Y PROPAGADOS HASTA AQUI CON JAVASCRIPT-->
+            <!-- Recordar <tr class="my_submission"> -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row cifar10-row leader-table">
+    <div class="col-sm-12">
+        <h3>CIFAR-10 Scores</h3>
+        <table class="table table-cifar10">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Team Name</th>
+                <th scope="col">Score</th>
+                <th scope="col">Entries</th>
+                <th scope="col">Last Submission <span class="best_text">(Best)</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- LOS RESULTADOS DEBEN SER CARGADOS EN PYTHON Y PROPAGADOS HASTA AQUI CON JAVASCRIPT-->
+            <!-- Recordar <tr class="my_submission"> -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- REGISTER Modal -->
+<div id="registerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">New user</h4>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off" method="post" action="{{ url_for('signup') }}">
+                    <!-- Importante definir el name de los inputs para poder referirlo posteriormente  -->
+                    <p>User<br><input type="text" name="username" class="inputForm" placeholder="Username"></p>
+                    <p>Password<br><input type="password" name="password" class="inputForm" placeholder="Password"></p>
+                    <input type="submit" value="Sign Up" class="btn btn-primary registerBtn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WRONG REGISTER Modal -->
+<div id="wrongRegisterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Register Error</h4>
+            </div>
+            <div class="modal-body">
+                <p>Error creating the user. Maybe the name is in use!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- OK REGISTER Modal -->
+<div id="okRegisterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">Register Completed</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your account has been created successfully!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- LOGIN Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">User Login</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Con este formulario trataremos de autenticar usuarios nuevos -->
+                <form autocomplete="off" method="post" action="{{ url_for('login') }}">
+                    <p>User<br><input type="text" name="username" class="inputForm" placeholder="Username"></p>
+                    <p>Password<br><input type="password" name="password" class="inputForm" placeholder="Password"></p>
+                    <input type="submit" value="Log In" class="btn btn-primary registerBtn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WRONG LOGIN Modal -->
+<div id="wrongLoginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Login Error</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please check that the user and the password are correct!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- OK LOGIN Modal -->
+<div id="okLoginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">Login Completed</h4>
+            </div>
+            <div class="modal-body">
+                <p>You have successfully accessed!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- OK LOGOUT Modal -->
+<div id="okLogoutModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+    
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                    <h4 class="modal-title text-info">Logged out</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You have logged out successfully!</p>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+
+{% endblock %}

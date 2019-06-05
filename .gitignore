@@ -1,0 +1,17 @@
+__pycache__
+env
+
+*.DS_Store
+*.pyc
+*.egg-info
+
+# Test-related
+.coverage
+.cache
+.pytest_cache
+
+# Developer environments
+.idea
+.vscode
+settings.json
+.ipynb_checkpoints
