@@ -20,9 +20,13 @@ $(document).ready(function () {
         window.location.href = '/logout'; //relative to domain
     });
 
+    $("#submit-btn-mnist").click(function(){
+        $('#mnistSubmitModal').modal('show');
+    });
+
 });
 
-function db_info(data, table){
+function db_info(data, table, username){
     if(jQuery.isEmptyObject(data) || data == ""){
         var newRowContent = "<tr class='empty_table'><th scope='row'>#</th><td>There are no Submissions</td> <td> </td><td> </td><td> </td></tr>";
         table.find("tbody").append(newRowContent);
@@ -35,7 +39,11 @@ function db_info(data, table){
             $score = val[1];
             $entries = val[2];
             $utc = val[3];
-            var newRowContent = "<tr><th scope='row'>"+$count+"</th><td>"+$name+"</td><td>"+$score+"</td><td>"+$entries+"</td><td>"+$utc+"</td></tr>";
+            if($name==username){
+                var newRowContent = "<tr class='my_submission'><th scope='row'>"+$count+"</th><td>"+$name+"</td><td>"+$score+"</td><td>"+$entries+"</td><td>"+$utc+"</td></tr>";
+            }else{
+                var newRowContent = "<tr><th scope='row'>"+$count+"</th><td>"+$name+"</td><td>"+$score+"</td><td>"+$entries+"</td><td>"+$utc+"</td></tr>";
+            }
             table.find("tbody").append(newRowContent);
             $count+=1;
         });
@@ -53,5 +61,7 @@ function manage_modals(modal){
         $('#wrongLoginModal').modal('show');
     }else if(modal.modal_type=="logout_ok"){
         $('#okLogoutModal').modal('show');
+    }else if(modal.modal_type=="wrong_extension"){
+        $('#wrongExtensionModal').modal('show');
     }
 }

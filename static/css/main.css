@@ -21,6 +21,18 @@
     height: 3rem;
 }
 
+.submit-btn{
+    width: 8.9rem;
+    height: 2.7rem;
+    float: right;
+    margin-top: -0.5rem;
+}
+
+.upload-btn{
+    margin-top: 0.75rem;
+    width: 6.4rem;
+    height: 2.3rem;
+}
 
 .leader-info{
     margin-top: 2rem;
@@ -39,7 +51,7 @@
 }
 
 .my_submission{
-    background-color: rgba(173,242,249,0.35);
+    background-color: #0043ff2b;;
 }
 
 p{

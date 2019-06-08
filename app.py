@@ -59,6 +59,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False # Para que no salgan notifi
 # Referimos nuestra base de datos pasandole nuestra aplicacion
 db = SQLAlchemy(app)
 
+current_page = "index"
+ALLOWED_EXTENSIONS = set(['npy'])
+
 # Vamos a crear a traves de una clase de Python nuestra tabla/esquema en la base de datos
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True) # Creamos un identificador unico clave primaria
@@ -67,9 +70,23 @@ class Users(db.Model):
     # Algo parecido para el password
     password = db.Column(db.String(80), nullable=False)
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def get_username():
+    try: current_username = session["username"]
+    except: current_username = ""
+    return current_username
+
 
 def trigger_action(action):
     # Main page
+    global current_page
+
+    if current_page == "mnist": return mnist(action=action)
+    if current_page == "cifar10": return cifar10(action=action)
+
     data_mnist = load_results("mnist_results.txt")
     mnist_info = display_results(data_mnist, 3)
     data_cifar10 = load_results("cifar10_results.txt")
@@ -77,7 +94,7 @@ def trigger_action(action):
 
     # Si no accedemos al endpoint a traves de GET o POST es porque se ha accedido de forma
     # 'normal' a traves del navegador y hacemos visible la vista signup.html con el formulario
-    return render_template('index.html', mnist_info=mnist_info, cifar10_info=cifar10_info, show_modal={"modal_type":action})
+    return render_template("index.html", mnist_info=mnist_info, cifar10_info=cifar10_info, show_modal={"modal_type":action}, username={"username":get_username()})
 
 # Las rutas definidas mediante flask tienen como predeterminado recibir una peticion de tipo GET
 # Pero la accion de signup se realiza mediante POST y debemos preprarar nuestra ruta
@@ -119,7 +136,7 @@ def login():
             return trigger_action("login_ok")
         else:
             return trigger_action("login_error")
-            
+
     return trigger_action("login_ok")
 
 
@@ -164,15 +181,53 @@ def display_results(results, items=-1, precision=5):
             if iters==items:break
         return result
 
+
+@app.route('/mnist')
+def mnist(action={}):
+    global current_page
+    current_page = "mnist"
+    # Main page
+    data_mnist = load_results("mnist_results.txt")
+    mnist_info = display_results(data_mnist, -1)
+    return render_template('mnist.html', mnist_info=mnist_info, cifar10_info={}, show_modal={"modal_type":action}, username={"username":get_username()})
+
+
+@app.route('/mnist_upload', methods = ['GET', 'POST'])
+def mnist_upload(action={}):
+    if request.method == 'POST':
+        f = request.files['file']
+        if f and allowed_file(f.filename):
+            file_path = "tmp/" + secure_filename(f.filename)
+            f.save(file_path)
+            
+            return 'file uploaded successfully'
+
+        else: return trigger_action("wrong_extension")
+    return "You have broken something?! :/"
+
+
+
+@app.route('/cifar10')
+def cifar10(action={}):
+    global current_page
+    current_page = "cifar10"
+    # Main page
+    data_cifar10 = load_results("cifar10_results.txt")
+    cifar10_info = display_results(data_cifar10, -1)
+    return render_template('cifar10.html', mnist_info={}, cifar10_info=cifar10_info, show_modal={"modal_type":action}, username={"username":get_username()})
+
+
 @app.route('/', methods=['GET'])
 def index():
+    global current_page
+    current_page = "index"
     # Main page
     data_mnist = load_results("mnist_results.txt")
     mnist_info = display_results(data_mnist, 3)
     data_cifar10 = load_results("cifar10_results.txt")
     cifar10_info = display_results(data_cifar10, 3)
 
-    return render_template('index.html', mnist_info=mnist_info, cifar10_info=cifar10_info)
+    return render_template('index.html', mnist_info=mnist_info, cifar10_info=cifar10_info, username={"username":get_username()})
 
 if __name__ == '__main__':
     db.create_all() # Comprueba si la db esta creada o no (si no lo esta la crea)

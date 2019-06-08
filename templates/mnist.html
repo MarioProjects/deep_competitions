@@ -3,7 +3,6 @@
 <script>
 
     var mnist_info = JSON.parse('{{ mnist_info | default("") | tojson | safe}}');
-    var cifar10_info = JSON.parse('{{ cifar10_info | default("") | tojson | safe}}');
     var show_modal = JSON.parse('{{ show_modal | default("") | tojson | safe }}');
     var username = JSON.parse('{{ username | default("") | tojson | safe }}');
     if (username!=""){username=username.username;}
@@ -11,8 +10,10 @@
     
     $(document).ready(function () {
         db_info(mnist_info, $(".table-mnist"), username);
-        db_info(cifar10_info, $(".table-cifar10"), username);
         if(show_modal!="" && !jQuery.isEmptyObject(show_modal)){manage_modals(show_modal);}
+        if(username==""){
+            $(".submit-btn").hide();
+        }
     });
 
 </script>
@@ -22,10 +23,10 @@
         <div class="page-info">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownDB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dashboard
+                    MNIST
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownDB">
-                <a class="dropdown-item" href="mnist">MNIST</a>
+                <a class="dropdown-item" href="/">DASHBOARD</a>
                 <a class="dropdown-item" href="cifar10">CIFAR-10</a>
                 </div>
             </div>
@@ -34,9 +35,14 @@
             </div>
         </div>
 
-        <div class="leader-info">
-            <p>This leaderboard is calculated on approximately 30% of the test data.<br>
-            The final results will be bases on the other 70%, so the final standings may be different.</p>
+        <div class="row">
+            <div class="col-sm-8 leader-info">
+                <p>This leaderboard is calculated on approximately 30% of the test data.<br>
+                The final results will be bases on the other 70%, so the final standings may be different.</p>
+            </div>
+            <div class="col-sm-4 leader-info">
+                <button type="button" class="btn btn-success submit-btn" id="submit-btn-mnist">SUBMIT</button>
+            </div>
         </div>
     </div>
 </div>
@@ -62,24 +68,45 @@
     </div>
 </div>
 
-<div class="row cifar10-row leader-table">
-    <div class="col-sm-12">
-        <h3>CIFAR-10 Scores</h3>
-        <table class="table table-cifar10">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Team Name</th>
-                <th scope="col">Score</th>
-                <th scope="col">Entries</th>
-                <th scope="col">Last Submission <span class="best_text">(Best)</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- LOS RESULTADOS DEBEN SER CARGADOS EN PYTHON Y PROPAGADOS HASTA AQUI CON JAVASCRIPT-->
-            <!-- Recordar <tr class="my_submission"> -->
-            </tbody>
-        </table>
+
+<!-- MNIST SUBMISSION Modal -->
+<div id="mnistSubmitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">MNIST Submission</h4>
+            </div>
+            <div class="modal-body">
+                Upload your numpy here!
+                <form action = "{{ url_for('mnist_upload') }}" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file" style="margin-top: 0.6rem"/> <br>
+                    <input type="submit" value="Submit" class="btn btn-primary upload-btn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- WRONF EXTENSION Modal -->
+<div id="wrongExtensionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Submission error</h4>
+            </div>
+            <div class="modal-body">
+                Please submit a numpy file (extension .npy)!
+            </div>
+        </div>
+
     </div>
 </div>
 

@@ -1,5 +1,6 @@
-- Revisar Signup/Login
-- Añadir estilos a mis submissions
-- Elegir base de datos -> Mostrar tabla entera y posibilidad de subir datos
-- Tutorial/Guia de como subir datos -> ¿FAQ?
-- Permitir hacer submissions
+- [x] Revisar Signup/Login
+- [x] Añadir estilos a mis submissions
+- [x] Elegir base de datos -> Mostrar tabla entera 
+- [ ] Subir y evaluar test = Permitir hacer submissions
+- [ ] Submission button solo si esta logueado
+- [ ] Tutorial/Guia de como subir datos -> ¿FAQ?
