@@ -25,7 +25,7 @@
     width: 8.9rem;
     height: 2.7rem;
     float: right;
-    margin-top: -0.5rem;
+    margin-top: 0.5rem;
 }
 
 .upload-btn{
@@ -62,6 +62,12 @@ a { color:white; text-decoration: none; }
 a:hover { color:white; text-decoration: none; }
 .nav a { color:white; text-decoration: none; }
 
+.download-link{
+    color: #0d0abd;
+}
+
+.download-link:hover { color: #0604a3; }
+
 .best_text{
     font-size: 0.8rem;
     font-style: italic;
@@ -84,4 +90,9 @@ form > p{
 
 nav > div{
     color: white;
+}
+
+.submission-guide{
+    margin-top: 3rem;
+    margin-bottom: 5rem;
 }

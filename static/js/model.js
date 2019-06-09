@@ -63,5 +63,11 @@ function manage_modals(modal){
         $('#okLogoutModal').modal('show');
     }else if(modal.modal_type=="wrong_extension"){
         $('#wrongExtensionModal').modal('show');
+    }else if(modal.modal_type=="submission_without_username"){
+        $('#noUserSubmissionnModal').modal('show');
+    }else if(modal.modal_type=="submission_ok_lower"){
+        $('#lowerSubmissionModal').modal('show');
+    }else if(modal.modal_type=="submission_ok_higher"){
+        $('#higherSubmissionModal').modal('show');
     }
 }

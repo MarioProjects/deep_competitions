@@ -2,5 +2,8 @@
 - [x] Añadir estilos a mis submissions
 - [x] Elegir base de datos -> Mostrar tabla entera 
 - [ ] Subir y evaluar test = Permitir hacer submissions
-- [ ] Submission button solo si esta logueado
+   + [x] MNIST
+   + [ ] CIFAR10
+- [x] Submission button solo si esta logueado
 - [ ] Tutorial/Guia de como subir datos -> ¿FAQ?
+- [ ] Login por email (comprobar en el signup que es un mail)

@@ -3,6 +3,10 @@ from __future__ import division, print_function
 import os
 import numpy as np
 import pandas as pd
+from sklearn import metrics
+
+csv_test_mnist = pd.read_csv("data/mnist_test.csv")
+MNIST_LABELS = csv_test_mnist.values[:,0]
 
 # Flask utils
 from flask import Flask, redirect, url_for, request, render_template
@@ -80,12 +84,12 @@ def get_username():
     return current_username
 
 
-def trigger_action(action):
+def trigger_action(action, additional_info=""):
     # Main page
     global current_page
-
-    if current_page == "mnist": return mnist(action=action)
-    if current_page == "cifar10": return cifar10(action=action)
+    print("Additional info: {}".format(additional_info))
+    if current_page == "mnist": return mnist(action=action, additional_info=additional_info)
+    if current_page == "cifar10": return cifar10(action=action, additional_info=additional_info)
 
     data_mnist = load_results("mnist_results.txt")
     mnist_info = display_results(data_mnist, 3)
@@ -94,7 +98,7 @@ def trigger_action(action):
 
     # Si no accedemos al endpoint a traves de GET o POST es porque se ha accedido de forma
     # 'normal' a traves del navegador y hacemos visible la vista signup.html con el formulario
-    return render_template("index.html", mnist_info=mnist_info, cifar10_info=cifar10_info, show_modal={"modal_type":action}, username={"username":get_username()})
+    return render_template("index.html", mnist_info=mnist_info, cifar10_info=cifar10_info, show_modal={"modal_type":action}, additional_info=additional_info, username={"username":get_username()})
 
 # Las rutas definidas mediante flask tienen como predeterminado recibir una peticion de tipo GET
 # Pero la accion de signup se realiza mediante POST y debemos preprarar nuestra ruta
@@ -183,38 +187,45 @@ def display_results(results, items=-1, precision=5):
 
 
 @app.route('/mnist')
-def mnist(action={}):
+def mnist(action={}, additional_info=""):
     global current_page
     current_page = "mnist"
     # Main page
     data_mnist = load_results("mnist_results.txt")
     mnist_info = display_results(data_mnist, -1)
-    return render_template('mnist.html', mnist_info=mnist_info, cifar10_info={}, show_modal={"modal_type":action}, username={"username":get_username()})
+    return render_template('mnist.html', mnist_info=mnist_info, cifar10_info={}, show_modal={"modal_type":action}, additional_info=additional_info, username={"username":get_username()})
 
 
 @app.route('/mnist_upload', methods = ['GET', 'POST'])
 def mnist_upload(action={}):
     if request.method == 'POST':
+        if not session.get('username'):
+            return trigger_action("submission_without_username")
         f = request.files['file']
         if f and allowed_file(f.filename):
             file_path = "tmp/" + secure_filename(f.filename)
             f.save(file_path)
+            user_preds = np.load(file_path)
+            user_accuracy = metrics.accuracy_score(MNIST_LABELS, user_preds)
             
-            return 'file uploaded successfully'
+            # Update txt database
+            data = pd.read_csv('mnist_results.txt', sep=",")
+            
+            higher = True
+            for past_result in data.loc[data["name"]==get_username()]["score"]:
+                if past_result>=user_accuracy: higher=False
+            
+            data = data.append({"name":get_username(), "score":user_accuracy, "utc":time.time()}, ignore_index=True)
+            data.to_csv('mnist_results.txt', sep=",", index=False)
+
+            os.remove(file_path)
+            
+            if not higher: return trigger_action("submission_ok_lower", additional_info={"accuracy":user_accuracy})
+            else: return trigger_action("submission_ok_higher", additional_info={"accuracy":user_accuracy})
 
         else: return trigger_action("wrong_extension")
     return "You have broken something?! :/"
 
-
-
-@app.route('/cifar10')
-def cifar10(action={}):
-    global current_page
-    current_page = "cifar10"
-    # Main page
-    data_cifar10 = load_results("cifar10_results.txt")
-    cifar10_info = display_results(data_cifar10, -1)
-    return render_template('cifar10.html', mnist_info={}, cifar10_info=cifar10_info, show_modal={"modal_type":action}, username={"username":get_username()})
 
 
 @app.route('/', methods=['GET'])

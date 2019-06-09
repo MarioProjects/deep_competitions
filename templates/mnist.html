@@ -5,10 +5,16 @@
     var mnist_info = JSON.parse('{{ mnist_info | default("") | tojson | safe}}');
     var show_modal = JSON.parse('{{ show_modal | default("") | tojson | safe }}');
     var username = JSON.parse('{{ username | default("") | tojson | safe }}');
+    var additional_info = JSON.parse('{{ additional_info | default("") | tojson | safe }}');
+    var accuracy = 0.0;
     if (username!=""){username=username.username;}
 
     
     $(document).ready(function () {
+        if (additional_info!=""){
+            var accuracy = additional_info.accuracy;
+            $(".put-result").text("Score: " + accuracy.toString())
+        }
         db_info(mnist_info, $(".table-mnist"), username);
         if(show_modal!="" && !jQuery.isEmptyObject(show_modal)){manage_modals(show_modal);}
         if(username==""){
@@ -37,8 +43,11 @@
 
         <div class="row">
             <div class="col-sm-8 leader-info">
-                <p>This leaderboard is calculated on approximately 30% of the test data.<br>
-                The final results will be bases on the other 70%, so the final standings may be different.</p>
+                <p>
+                    MNIST ("Modified National Institute of Standards and Technology") is the de facto “hello world” dataset of computer vision. 
+                    Since its release in 1999, this classic dataset of handwritten images has served as the basis for benchmarking classification algorithms.
+                    In this competition, your goal is to correctly identify digits from a dataset of tens of thousands of handwritten images.
+                </p>
             </div>
             <div class="col-sm-4 leader-info">
                 <button type="button" class="btn btn-success submit-btn" id="submit-btn-mnist">SUBMIT</button>
@@ -68,6 +77,37 @@
     </div>
 </div>
 
+<div class="row submission-guide">
+    <div class="col-sm-12">
+        <h2>Submission Guide</h2>
+        First download the data from <a href="https://drive.google.com/file/d/1AMFV6ezok60FZCo2MNL69pGMsr2slJjP/view?usp=sharing" target="_blank" class="download-link">here</a>.
+        Then follow the instructions below to load the data and make a simple prediction with a pretrained Pytorch model.
+
+        <pre><code class="language-python"># First load/train your Pytorch model
+import pandas as pd
+import numpy as np
+
+csv_test_features = pd.read_csv("mnist_test_features.csv")
+test_features = csv_test_features.values # features shape (10000, 784)
+test_features = test_features / 255 # Normalize range [0, 255] -> [0, 1]
+
+all_preds = np.array(())
+# Split data in batcehs -> n is number of batches -> 10000 int 100 batches = batch_size 100
+data_batches = np.split(test_feat, 100, axis=0)
+for indx, features in enumerate(data_batches):
+    with torch.no_grad():
+        features = torch.from_numpy(features).float().to(device) # Data to Pytorch tensor
+        outputs = net(features) # Model inference
+        _, pred = outputs.max(1)  # get the index of the max log-probability
+        all_preds = np.append(all_preds, pred.data.cpu().numpy())
+# Finally save the predictions -> shape (10000,)
+np.save("my_predictions.npy", all_preds)</code></pre>
+
+        Finally, upload your <i>my_predictions.npy</i> generated.
+
+    </div>
+</div>
+
 
 <!-- MNIST SUBMISSION Modal -->
 <div id="mnistSubmitModal" class="modal fade" role="dialog">
@@ -92,7 +132,7 @@
 </div>
 
 
-<!-- WRONF EXTENSION Modal -->
+<!-- WRONG EXTENSION Modal -->
 <div id="wrongExtensionModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
 
@@ -110,6 +150,62 @@
     </div>
 </div>
 
+<!-- NO USERNAME SUBMISSION Modal -->
+<div id="noUserSubmissionnModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Are you a hacker?!</h4>
+            </div>
+            <div class="modal-body">
+                We have not your username... Are you logged into the system? If not, do it!
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WORST SUBMISSION Modal -->
+<div id="lowerSubmissionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Oh, you don't improve your results :(</h4>
+            </div>
+            <div class="modal-body">
+                <p class="put-result"></p>
+                <p>Try different techniques and do not give up!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- BETTER SUBMISSION Modal -->
+<div id="higherSubmissionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">You have improved :)</h4>
+            </div>
+            <div class="modal-body">
+                <p class="put-result"></p>
+                <p>Very well keep it up, you are on fire!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <!-- REGISTER Modal -->
 <div id="registerModal" class="modal fade" role="dialog">
