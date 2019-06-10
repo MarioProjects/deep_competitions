@@ -117,7 +117,10 @@ def signup():
             db.session.commit()
             # Devolvemos una vista recordad (deberia ser render_template)
             # Aqui nos basta con sacar que ha ido todo bien
-            return trigger_action("register_ok")
+            # --> return trigger_action("register_ok") # Cambiado para que se haga login tras signup
+            session["username"] = request.form["username"]
+            # return "You are logged in"
+            return trigger_action("login_ok")
             #return "You've registered successfully"
         except: # Podemos tener un error por ejemplo duplicando usernames
             pass # Se gestiona finalizando abajo con wrong_action()

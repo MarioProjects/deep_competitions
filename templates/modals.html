@@ -1,0 +1,251 @@
+
+<!--
+ ####################################
+ ########## GENERAL MODALS ##########
+ ####################################
+ -->
+
+<!-- REGISTER Modal -->
+<div id="registerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">New user</h4>
+            </div>
+            <div class="modal-body">
+                <form autocomplete="off" method="post" action="{{ url_for('signup') }}">
+                    <!-- Importante definir el name de los inputs para poder referirlo posteriormente  -->
+                    <p>Email<br><input type="email" name="username" class="inputForm" placeholder="Enter your email"></p>
+                    <p>Password<br><input type="password" name="password" class="inputForm" placeholder="Password"></p>
+                    <input type="submit" value="Sign Up" class="btn btn-primary registerBtn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WRONG REGISTER Modal -->
+<div id="wrongRegisterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Register Error</h4>
+            </div>
+            <div class="modal-body">
+                <p>Error creating the user. Maybe the name is in use!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- OK REGISTER Modal -->
+<div id="okRegisterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">Register Completed</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your account has been created successfully!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- LOGIN Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">User Login</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Con este formulario trataremos de autenticar usuarios nuevos -->
+                <form autocomplete="off" method="post" action="{{ url_for('login') }}">
+                    <p>User<br><input type="text" name="username" class="inputForm" placeholder="Username"></p>
+                    <p>Password<br><input type="password" name="password" class="inputForm" placeholder="Password"></p>
+                    <input type="submit" value="Log In" class="btn btn-primary registerBtn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WRONG LOGIN Modal -->
+<div id="wrongLoginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Login Error</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please check that the user and the password are correct!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- OK LOGIN Modal -->
+<div id="okLoginModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">Login Completed</h4>
+            </div>
+            <div class="modal-body">
+                <p>You have successfully accessed!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- OK LOGOUT Modal -->
+<div id="okLogoutModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-info">Logged out</h4>
+            </div>
+            <div class="modal-body">
+                <p>You have logged out successfully!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--
+ ####################################
+ ######### SUBMISSIONS MODALS #######
+ ####################################
+ -->
+
+
+<!-- MNIST SUBMISSION Modal -->
+<div id="mnistSubmitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">MNIST Submission</h4>
+            </div>
+            <div class="modal-body">
+                Upload your numpy here!
+                <form action = "{{ url_for('mnist_upload') }}" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file" style="margin-top: 0.6rem"/> <br>
+                    <input type="submit" value="Submit" class="btn btn-primary upload-btn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- WRONG EXTENSION Modal -->
+<div id="wrongExtensionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Submission error</h4>
+            </div>
+            <div class="modal-body">
+                Please submit a numpy file (extension .npy)!
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- NO USERNAME SUBMISSION Modal -->
+<div id="noUserSubmissionnModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Are you a hacker?!</h4>
+            </div>
+            <div class="modal-body">
+                We have not your username... Are you logged into the system? If not, do it!
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WORST SUBMISSION Modal -->
+<div id="lowerSubmissionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-danger">Oh, you don't improve your results :(</h4>
+            </div>
+            <div class="modal-body">
+                <p class="put-result"></p>
+                <p>Try different techniques and do not give up!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- BETTER SUBMISSION Modal -->
+<div id="higherSubmissionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title text-success">You have improved :)</h4>
+            </div>
+            <div class="modal-body">
+                <p class="put-result"></p>
+                <p>Very well keep it up, you are on fire!</p>
+            </div>
+        </div>
+
+    </div>
+</div>
