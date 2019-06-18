@@ -24,6 +24,10 @@ $(document).ready(function () {
         $('#mnistSubmitModal').modal('show');
     });
 
+    $("#submit-btn-cifar10").click(function(){
+        $('#cifar10SubmitModal').modal('show');
+    });
+
 });
 
 function db_info(data, table, username){

@@ -2,7 +2,7 @@
 
 <script>
 
-    var mnist_info = JSON.parse('{{ mnist_info | default("") | tojson | safe}}');
+    var cifar10_info = JSON.parse('{{ cifar10_info | default("") | tojson | safe}}');
     var show_modal = JSON.parse('{{ show_modal | default("") | tojson | safe }}');
     var username = JSON.parse('{{ username | default("") | tojson | safe }}');
     var additional_info = JSON.parse('{{ additional_info | default("") | tojson | safe }}');
@@ -15,9 +15,9 @@
             var accuracy = additional_info.accuracy;
             $(".put-result").text("Score: " + accuracy.toString())
         }
-        db_info(mnist_info, $(".table-mnist"), username);
+        db_info(cifar10_info, $(".table-cifar10"), username);
         if(show_modal!="" && !jQuery.isEmptyObject(show_modal)){manage_modals(show_modal);}
-        if(username==""){
+        if(username!=""){
             $(".submit-btn").show();
         }
     });
@@ -29,11 +29,11 @@
         <div class="page-info">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownDB" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    MNIST
+                    CIFAR-10
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownDB">
                 <a class="dropdown-item" href="/">DASHBOARD</a>
-                <a class="dropdown-item" href="cifar10">CIFAR-10</a>
+                <a class="dropdown-item" href="mnist">MNIST</a>
                 </div>
             </div>
             <div class="leader-title">
@@ -44,22 +44,21 @@
         <div class="row">
             <div class="col-sm-8 leader-info">
                 <p>
-                    MNIST ("Modified National Institute of Standards and Technology") is the de facto “hello world” dataset of computer vision. 
-                    Since its release in 1999, this classic dataset of handwritten images has served as the basis for benchmarking classification algorithms.
-                    In this competition, your goal is to correctly identify digits from a dataset of tens of thousands of handwritten images.
+                    The CIFAR-10 is a labeled subset of the 80 million tiny images dataset. They were collected by Alex Krizhevsky, Vinod Nair, and Geoffrey Hinton.
+                    The CIFAR-10 dataset consists of 60000 32x32 colour images in 10 classes, with 6000 images per class. There are 50000 training images and 10000 test images.
                 </p>
             </div>
             <div class="col-sm-4 leader-info">
-                <button type="button" class="btn btn-success submit-btn" id="submit-btn-mnist" style="display: none">SUBMIT</button>
+                <button type="button" class="btn btn-success submit-btn" id="submit-btn-cifar10" style="display: none">SUBMIT</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mnist-row leader-table">
+<div class="row cifar10-row leader-table">
     <div class="col-sm-12">
-        <h3>MNIST Scores</h3>
-        <table class="table table-mnist">
+        <h3>CIFAR-10 Scores</h3>
+        <table class="table table-cifar10">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">#</th>
@@ -84,16 +83,14 @@
         Then follow the instructions below to load the data and make a simple prediction with a pretrained Pytorch model.
 
         <pre><code class="language-python"># First load/train your Pytorch model
-import pandas as pd
 import numpy as np
 
-csv_test_features = pd.read_csv("mnist_test_features.csv")
-test_features = csv_test_features.values # features shape (10000, 784)
-test_features = test_features / 255 # Normalize range [0, 255] -> [0, 1]
+raw_images = np.load("cifar10_raw_test.npy")
+raw_images  = raw_images  / 255 # Normalize range [0, 255] -> [0, 1]
 
 all_preds = np.array(())
 # Split data in batcehs -> n is number of batches -> 10000 int 100 batches = batch_size 100
-data_batches = np.split(test_feat, 100, axis=0)
+data_batches = np.split(raw_images, 100, axis=0)
 for indx, features in enumerate(data_batches):
     with torch.no_grad():
         features = torch.from_numpy(features).float().to(device) # Data to Pytorch tensor

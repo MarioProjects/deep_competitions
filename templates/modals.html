@@ -175,6 +175,29 @@
 </div>
 
 
+<!-- CIFAR10 SUBMISSION Modal -->
+<div id="cifar10SubmitModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h4 class="modal-title">CIFAR-10 Submission</h4>
+            </div>
+            <div class="modal-body">
+                Upload your numpy here!
+                <form action = "{{ url_for('cifar10_upload') }}" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file" style="margin-top: 0.6rem"/> <br>
+                    <input type="submit" value="Submit" class="btn btn-primary upload-btn">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
 <!-- WRONG EXTENSION Modal -->
 <div id="wrongExtensionModal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered">

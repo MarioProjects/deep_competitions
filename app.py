@@ -7,6 +7,7 @@ from sklearn import metrics
 
 csv_test_mnist = pd.read_csv("data/mnist_test.csv")
 MNIST_LABELS = csv_test_mnist.values[:,0]
+CIFAR10_LABELS = np.load("data/cifar10_classes_test.npy")
 
 # Flask utils
 from flask import Flask, redirect, url_for, request, render_template
@@ -229,6 +230,50 @@ def mnist_upload(action={}):
         else: return trigger_action("wrong_extension")
     return "You have broken something?! :/"
 
+
+@app.route('/cifar10')
+def cifar10(action={}, additional_info=""):
+    global current_page
+    current_page = "cifar10"
+    # Main page
+    data_cifar10= load_results("cifar10_results.txt")
+    cifar10_info = display_results(data_cifar10, -1)
+    return render_template('cifar10.html', mnist_info={}, cifar10_info=cifar10_info, show_modal={"modal_type": action},
+                           additional_info=additional_info, username={"username": get_username()})
+
+
+@app.route('/cifar10_upload', methods=['GET', 'POST'])
+def cifar10_upload(action={}):
+    if request.method == 'POST':
+        if not session.get('username'):
+            return trigger_action("submission_without_username")
+        f = request.files['file']
+        if f and allowed_file(f.filename):
+            file_path = "tmp/" + secure_filename(f.filename)
+            f.save(file_path)
+            user_preds = np.load(file_path)
+            user_accuracy = metrics.accuracy_score(CIFAR10_LABELS, user_preds)
+
+            # Update txt database
+            data = pd.read_csv('cifar10_results.txt', sep=",")
+
+            higher = True
+            for past_result in data.loc[data["name"] == get_username()]["score"]:
+                if past_result >= user_accuracy: higher = False
+
+            data = data.append({"name": get_username(), "score": user_accuracy, "utc": time.time()}, ignore_index=True)
+            data.to_csv('cifar10_results.txt', sep=",", index=False)
+
+            os.remove(file_path)
+
+            if not higher:
+                return trigger_action("submission_ok_lower", additional_info={"accuracy": user_accuracy})
+            else:
+                return trigger_action("submission_ok_higher", additional_info={"accuracy": user_accuracy})
+
+        else:
+            return trigger_action("wrong_extension")
+    return "You have broken something?! :/"
 
 
 @app.route('/', methods=['GET'])
