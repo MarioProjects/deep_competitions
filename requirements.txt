@@ -3,7 +3,6 @@ Werkzeug
 Flask
 flask_sqlalchemy
 numpy
-https://download.pytorch.org/whl/cpu/torch-1.0.1.post2-cp36-cp36m-linux_x86_64.whl
-opencv-contrib-python
+pandas
+sklearn
 gevent
-face_recognition
