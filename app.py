@@ -34,18 +34,8 @@ import pathlib
 import time
 from datetime import datetime
 
-import torch
-from torch import nn, optim
-from torch.autograd.variable import Variable
-import torch.nn.functional as F
-
 # Para utilizar nuestras bases de datos basadas en SQl instalamos flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
-
-# We establish a seed for the replication of the experiments correctly
-seed = 0
-torch.manual_seed(seed=seed)
-torch.cuda.manual_seed(seed=seed)
 
 # Con os.path.abspath(os.getcwd()) tomamos la ruta absoluta de nuestro entorno de trabajo actual (pwd)
 # PODEMOS ACCEDER A NUESTRA BASE DE DATOS A TRAVES DE CONSOLA -> sqlite3 users.db
