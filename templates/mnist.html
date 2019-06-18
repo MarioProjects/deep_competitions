@@ -17,7 +17,7 @@
         }
         db_info(mnist_info, $(".table-mnist"), username);
         if(show_modal!="" && !jQuery.isEmptyObject(show_modal)){manage_modals(show_modal);}
-        if(username==""){
+        if(username!=""){
             $(".submit-btn").show();
         }
     });
