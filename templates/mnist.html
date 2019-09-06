@@ -86,20 +86,20 @@
         <pre><code class="language-python"># First load/train your Pytorch model
 import pandas as pd
 import numpy as np
-
+# Data loading
 csv_test_features = pd.read_csv("mnist_test_features.csv")
 test_features = csv_test_features.values # features shape (10000, 784)
 test_features = test_features / 255 # Normalize range [0, 255] -> [0, 1]
-
+# Empty variable for predictions
 all_preds = np.array(())
-# Split data in batcehs -> n is number of batches -> 10000 int 100 batches = batch_size 100
+# Split data in batches -> n is number of batches -> 10000 int 100 batches = batch_size 100
 data_batches = np.split(test_feat, 100, axis=0)
 for indx, features in enumerate(data_batches):
-    with torch.no_grad():
+    with torch.no_grad(): # Make all the operations in the block have no gradients - Test Time!
         features = torch.from_numpy(features).float().to(device) # Data to Pytorch tensor
         outputs = net(features) # Model inference
         _, pred = outputs.max(1)  # get the index of the max log-probability
-        all_preds = np.append(all_preds, pred.data.cpu().numpy())
+        all_preds = np.append(all_preds, pred.data.cpu().numpy()) # Accumulate predictions
 # Finally save the predictions -> shape (10000,)
 np.save("my_predictions.npy", all_preds)</code></pre>
 
