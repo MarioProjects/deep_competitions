@@ -1,4 +1,4 @@
-# Web Rest API Compouter Vision Competitions 
+# Web Rest API Computer Vision Competitions 
 
 [Live Application here](https://vision-competitions.herokuapp.com/)
 
